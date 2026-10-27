@@ -336,26 +336,31 @@ def api_reset():
 # ==============================================================================
 # INICIALIZAÇÃO DO SERVIDOR WEB
 # ==============================================================================
-def run_server(host="127.0.0.1", port=5000, open_browser=True):
+def run_server(host="0.0.0.0", port=5000, open_browser=True):
     print("=" * 80)
     print("🏛️  SISTEMA DE PESQUISA DE PREÇOS — SERVIDOR WEB LOCAL (LEI 14.133/2021)")
     print("=" * 80)
-    print(f"[*] Servidor iniciado em: http://{host}:{port}/")
+    print(f"[*] Servidor Web Local ATIVO:")
+    print(f"    👉 http://127.0.0.1:{port}/")
+    print(f"    👉 http://localhost:{port}/")
     print("[*] Pressione Ctrl+C para encerrar o servidor a qualquer momento.")
     print("=" * 80)
 
     if open_browser:
         def _open():
             time.sleep(1.2)
-            webbrowser.open(f"http://{host}:{port}/")
+            webbrowser.open(f"http://127.0.0.1:{port}/")
         threading.Thread(target=_open, daemon=True).start()
 
-    app.run(host=host, port=port, debug=False)
+    try:
+        app.run(host=host, port=port, debug=False)
+    except Exception as e:
+        print(f"Aviso no servidor web: {e}")
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Servidor Web Local do Sistema de Pesquisa de Preços")
-    parser.add_argument("--host", default="127.0.0.1", help="Endereço de escuta (padrão: 127.0.0.1)")
+    parser.add_argument("--host", default="0.0.0.0", help="Endereço de escuta (padrão: 0.0.0.0)")
     parser.add_argument("--port", type=int, default=5000, help="Porta do servidor (padrão: 5000)")
     parser.add_argument("--no-browser", action="store_true", help="Não abrir o navegador automaticamente")
     args = parser.parse_args()

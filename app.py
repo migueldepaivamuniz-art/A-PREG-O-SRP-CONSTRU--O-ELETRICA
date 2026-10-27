@@ -1704,6 +1704,7 @@ class CotadorQtApp(QMainWindow):
 
         self.init_ui()
         self.refresh_all_data()
+        self.start_background_web_server()
 
     def init_ui(self):
         central_widget = QWidget(self)
@@ -3080,29 +3081,21 @@ class CotadorQtApp(QMainWindow):
                 "Um backup de segurança completo foi criado na pasta de backups."
             )
 
-    def action_open_web_server(self):
+    def start_background_web_server(self):
         import threading
-        import webbrowser
-        def _start_web():
+        def _run():
             try:
                 import servidor_web
-                servidor_web.run_server(host="127.0.0.1", port=5000, open_browser=True)
+                servidor_web.run_server(host="0.0.0.0", port=5000, open_browser=False)
             except Exception as e:
-                print(f"Erro ao iniciar servidor web local: {e}")
+                print(f"[*] Aviso: Servidor web já ativo ou porta ocupada: {e}")
 
-        if not getattr(self, "_web_server_started", False):
-            self._web_server_started = True
-            th = threading.Thread(target=_start_web, daemon=True)
-            th.start()
-            QMessageBox.information(
-                self,
-                "Servidor Web Local Iniciado",
-                "O servidor web local foi iniciado com sucesso!\n\n"
-                "Endereço: http://127.0.0.1:5000/\n\n"
-                "A página será aberta no seu navegador padrão."
-            )
-        else:
-            webbrowser.open("http://127.0.0.1:5000/")
+        t = threading.Thread(target=_run, daemon=True)
+        t.start()
+
+    def action_open_web_server(self):
+        import webbrowser
+        webbrowser.open("http://127.0.0.1:5000/")
 
     def action_reset_sheet(self):
         reset_active_sheet_to_default()
