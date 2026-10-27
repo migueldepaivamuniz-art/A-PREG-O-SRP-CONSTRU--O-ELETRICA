@@ -43,9 +43,13 @@ if %errorlevel% neq 0 (
 :: 3. Inicia o servidor web e abre no navegador padrão
 echo.
 echo ===============================================================================
-echo     🚀 INICIANDO SERVIDOR WEB LOCAL EM: http://127.0.0.1:5000/
-echo     O navegador abrirá automaticamente em instantes...
-echo     Para encerrar o servidor, basta fechar esta janela ou teclar Ctrl + C.
+echo     🚀 SERVIDOR WEB LOCAL INICIADO NA PORTA 5000:
+echo.
+echo     👉 Para você acessar neste PC:
+echo        http://127.0.0.1:5000/   (ou http://localhost:5000/)
+echo.
+echo     👉 Para seu colega acessar no PC dele (mesma rede/Wi-Fi):
+echo        http://192.168.7.194:5000/
 echo ===============================================================================
 echo.
 

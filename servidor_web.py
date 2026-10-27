@@ -14,10 +14,22 @@ import json
 import time
 import glob
 import threading
+import socket
 import webbrowser
 from flask import Flask, render_template, jsonify, request, send_from_directory, send_file
 from werkzeug.utils import secure_filename
 from playwright.sync_api import sync_playwright
+
+def get_local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0.5)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
 
 # Importa motor de negócio e persistência do app.py
 from app import (
@@ -148,7 +160,9 @@ def api_get_data():
             "gemini_rpd": rpd_used
         },
         "active_sheet": get_active_sheet_info(),
-        "prints": prints
+        "prints": prints,
+        "local_ip": get_local_ip(),
+        "network_url": f"http://{get_local_ip()}:5000/"
     })
 
 # ==============================================================================
@@ -337,12 +351,17 @@ def api_reset():
 # INICIALIZAÇÃO DO SERVIDOR WEB
 # ==============================================================================
 def run_server(host="0.0.0.0", port=5000, open_browser=True):
+    local_ip = get_local_ip()
     print("=" * 80)
     print("🏛️  SISTEMA DE PESQUISA DE PREÇOS — SERVIDOR WEB LOCAL (LEI 14.133/2021)")
     print("=" * 80)
-    print(f"[*] Servidor Web Local ATIVO:")
-    print(f"    👉 http://127.0.0.1:{port}/")
-    print(f"    👉 http://localhost:{port}/")
+    print(f"[*] Servidor Web Local ATIVO e pronto para conexões na rede:")
+    print(f"    👉 Para você acessar neste PC:")
+    print(f"       http://127.0.0.1:{port}/  (ou http://localhost:{port}/)")
+    print(f"")
+    print(f"    👉 Para seu colega acessar no PC dele (mesma rede/Wi-Fi):")
+    print(f"       http://{local_ip}:{port}/")
+    print("=" * 80)
     print("[*] Pressione Ctrl+C para encerrar o servidor a qualquer momento.")
     print("=" * 80)
 

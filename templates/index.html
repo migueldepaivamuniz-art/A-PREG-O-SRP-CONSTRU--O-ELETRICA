@@ -872,6 +872,9 @@
             </div>
         </div>
         <div class="header-actions">
+            <button class="btn btn-sm btn-primary" id="btnShareNetwork" onclick="copyNetworkUrl()" title="Copiar link para seu colega acessar no PC dele (na mesma rede local)">
+                🔗 Link para Colega: <span id="lblNetworkIp">Carregando...</span>
+            </button>
             <div id="statusPill" class="status-pill online">
                 <span class="status-dot"></span>
                 <span id="statusPillText">Pronto / Conectado</span>
@@ -1355,9 +1358,23 @@
                 // 5. Preencher dropdown de Comprovantes
                 renderPrintsDropdown();
 
+                // 6. Atualizar Link da Rede Local
+                if (data.network_url) {
+                    document.getElementById('lblNetworkIp').innerText = data.network_url;
+                }
+
             } catch (err) {
                 console.error("Erro ao buscar dados:", err);
             }
+        }
+
+        function copyNetworkUrl() {
+            const url = appData.network_url || `http://${window.location.hostname}:5000/`;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast(`✅ Link copiado: ${url} (Envie para seu colega acessar no PC dele!)`, 4500);
+            }).catch(() => {
+                prompt("Copie este endereço para seu colega acessar no PC dele:", url);
+            });
         }
 
         // RENDERIZAR TABELA DE COTAÇÕES
