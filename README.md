@@ -1,6 +1,8 @@
 # Sistema de Pesquisa de Preços de Mercado — Pregão SRP
 
-Sistema corporativo desktop para automação de pesquisa de preços de mercado, auditoria por inteligência artificial e geração de comprovantes oficiais com carimbo monocromático de autenticidade, em estrita conformidade com a **Lei Federal nº 14.133/2021** (Nova Lei de Licitações) e Instrução Normativa SEGES/ME.
+Sistema corporativo para automação de pesquisa de preços de mercado, auditoria por inteligência artificial e geração de comprovantes oficiais com carimbo monocromático de autenticidade, em estrita conformidade com a **Lei Federal nº 14.133/2021** (Nova Lei de Licitações) e Instrução Normativa SEGES/ME.
+
+Disponível em dois modos de uso: **Aplicativo Desktop (PySide6 / Qt)** e **Servidor Web Local (Navegador Web)**.
 
 ---
 
@@ -8,28 +10,33 @@ Sistema corporativo desktop para automação de pesquisa de preços de mercado, 
 
 Basta dar um **duplo clique** em qualquer um dos arquivos abaixo na pasta do projeto:
 
-- **`INICIAR_SISTEMA.bat`** ou **`EXECUTAR.bat`**
+### Opção 1: Usar no Navegador Web (Recomendado)
+- **`INICIAR_SERVIDOR_WEB.bat`**  
+  *Inicia o servidor web local e abre automaticamente o sistema no Google Chrome, Microsoft Edge ou seu navegador padrão em `http://127.0.0.1:5000/`.*
 
-O iniciador automático:
-1. Detecta o Python automaticamente no seu Windows.
-2. Cria o arquivo `.env` de configuração se ainda não existir.
-3. Instala as dependências necessárias de forma automática na primeira execução.
-4. Abre a interface gráfica do sistema.
+### Opção 2: Usar como Aplicativo Desktop
+- **`INICIAR_SISTEMA.bat`** ou **`EXECUTAR.bat`**  
+  *Abre a interface gráfica nativa para desktop (Windows Qt).*
+
+Ambos os iniciadores:
+1. Detectam o Python automaticamente no seu Windows.
+2. Criam o arquivo `.env` de configuração se ainda não existir.
+3. Instalam as dependências necessárias automaticamente na primeira execução.
+4. Iniciam o sistema sem que você precise digitar comandos no terminal.
 
 ---
 
-## 🛠️ Instalação Manual (Opcional)
+## 🛠️ Execução por Linha de Comando (Opcional)
 
-Se preferir utilizar a linha de comando:
+Se preferir utilizar o terminal:
 
 ```bash
-# 1. Instalar dependências
-pip install -r requirements.txt
+# Iniciar a versão Web no navegador:
+python app.py --web
+# ou:
+python servidor_web.py
 
-# 2. Instalar o navegador do robô de coleta
-playwright install chromium
-
-# 3. Iniciar o aplicativo
+# Iniciar a versão Desktop (Qt):
 python app.py
 ```
 
@@ -42,7 +49,7 @@ python app.py
    ```env
    GEMINI_API_KEY=sua_chave_aqui
    ```
-3. Salve o arquivo. O sistema carregará a chave automaticamente na próxima inicialização.
+3. Salve o arquivo. O sistema carregará a chave automaticamente na inicialização.
 
 ---
 
@@ -50,10 +57,13 @@ python app.py
 
 | Arquivo / Pasta | Finalidade |
 | :--- | :--- |
-| **`INICIAR_SISTEMA.bat`** | **Executável principal de 1 clique** para abrir o sistema. |
-| **`EXECUTAR.bat`** | Atalho rápido para o iniciador. |
-| **`INSTALAR_DEPENDENCIAS.bat`** | Instalador e atualizador de pacotes em 1 clique. |
-| **`app.py`** | Código-fonte unificado da aplicação desktop (PySide6 / Qt). |
+| **`INICIAR_SERVIDOR_WEB.bat`** | **Executável de 1 clique** para abrir a versão Web no navegador. |
+| **`INICIAR_SISTEMA.bat`** | **Executável de 1 clique** para abrir a versão Desktop (Qt). |
+| **`EXECUTAR.bat`** | Atalho rápido para o aplicativo desktop. |
+| **`INSTALAR_DEPENDENCIAS.bat`** | Instalador e reparador de dependências em 1 clique. |
+| **`servidor_web.py`** | Servidor web local (Flask) e API REST de alta performance. |
+| **`templates/index.html`** | Interface Web responsiva com o mesmo layout corporativo do desktop. |
+| **`app.py`** | Código-fonte da aplicação desktop e motor de pesquisa/IA compartilhado. |
 | **`requirements.txt`** | Lista oficial de dependências do Python. |
 | **`.env`** | Configuração local da chave da API (privado, não comitado). |
 | **`.env.example`** | Modelo de referência das variáveis de ambiente. |
@@ -64,8 +74,10 @@ python app.py
 
 ## 🏛️ Funcionalidades Integradas
 
+- **Layout Idêntico e Responsivo:** Mesma hierarquia visual, cores institucionais, KPIs compactos, tabela expansível e painel de detalhes tanto na versão Web quanto no Desktop.
 - **Pesquisa Comercial Automatizada:** Coleta de cotações em lojas e fornecedores com Playwright.
 - **Auditoria por IA (Gemini 3.1 Flash Lite):** Conferência de especificações técnicas, equivalência e conversão de embalagens.
 - **Validação de Fornecedores e CNPJ:** Consulta automática na base oficial da Receita Federal.
+- **Visualizador de Comprovantes:** Zoom dinâmico, ajuste de largura/janela e navegação entre lotes.
 - **Carimbo Oficial Monocromático:** Certificação gráfica das páginas capturadas com data, hora, IP/origem e hash.
 - **Exportação Multiformato:** Planilha consolidada em Excel (.xlsx) e pacote digital completo (.zip).

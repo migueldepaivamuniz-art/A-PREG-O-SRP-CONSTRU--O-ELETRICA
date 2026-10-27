@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pesquisa de Preços de Mercado — Pregão SRP (Lei 14.133/2021)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-active: #075985;
+            --primary-light: #e0f2fe;
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --warning: #c2410c;
+            --warning-light: #fffaf5;
+            --warning-border: #fed7aa;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --danger-light: #fee2e2;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER INSTITUCIONAL */
+        header.app-header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            height: 54px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .header-text h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e3a8a;
+            letter-spacing: -0.2px;
+        }
+
+        .header-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 600;
+            background-color: #f1f5f9;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .status-pill.online {
+            background-color: var(--success-light);
+            color: var(--success);
+            border-color: #bbf7d0;
+        }
+
+        .status-pill.busy {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-color: #bae6fd;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .status-pill.busy .status-dot {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+        }
+
+        /* BOTÕES PADRÃO */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background-color: var(--bg-subtle);
+            border-color: var(--border-hover);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
+        }
+
+        .btn-primary:active {
+            background-color: var(--primary-active);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            border-color: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            border-color: var(--danger-hover);
+            color: #ffffff;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 11px;
+            height: 26px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* KPI CARDS BAR */
+        .kpi-container {
+            padding: 10px 16px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            background-color: var(--bg-body);
+        }
+
+        .kpi-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+            min-height: 50px;
+        }
+
+        .kpi-icon {
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .kpi-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .kpi-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+
+        .kpi-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .kpi-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e3a8a;
+            line-height: 1;
+        }
+
+        .kpi-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 9999px;
+            line-height: 1.2;
+        }
+
+        .kpi-badge.green {
+            background-color: var(--success-light);
+            color: var(--success);
+        }
+
+        .kpi-badge.blue {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* CORPO PRINCIPAL COM SPLITTER */
+        .main-workspace {
+            display: flex;
+            flex: 1;
+            padding: 0 16px 16px 16px;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR (315px) */
+        aside.sidebar {
+            width: 315px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: calc(100vh - 130px);
+            padding-right: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        aside.sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            margin: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* GRUPOS DA SIDEBAR */
+        .sidebar-group {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .sidebar-group.danger-zone {
+            background-color: var(--warning-light);
+            border-color: var(--warning-border);
+        }
+
+        .group-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .danger-zone .group-header {
+            color: var(--warning);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        .range-inputs input, .single-input input {
+            width: 65px;
+            padding: 4px 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .btn-group-v {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .progress-box {
+            margin-top: 10px;
+            background-color: #f1f5f9;
+            border-radius: 6px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+            transition: width 0.3s ease;
+        }
+
+        .status-msg-box {
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            background-color: #f8fafc;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            word-break: break-word;
+        }
+
+        /* CONTEÚDO PRINCIPAL (TABS) */
+        main.content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* BARRA DE NAVEGAÇÃO DE ABAS */
+        .tabs-nav {
+            display: flex;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid var(--border);
+            padding: 4px 8px 0 8px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background-color: #e2e8f0;
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-card);
+            color: #1e3a8a;
+            border-color: var(--border);
+            border-bottom-color: var(--bg-card);
+            font-weight: 700;
+            margin-bottom: -1px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.02);
+        }
+
+        .tab-pane {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 12px;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        /* ABA 1: TABELA E FILTROS */
+        .filter-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 260px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 6px 10px 6px 28px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .filter-select {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .counter-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background-color: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* TABELA DE COTAÇÕES */
+        .table-wrapper {
+            flex: 1;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg-card);
+            max-height: 480px;
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        table.data-table th {
+            background-color: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        table.data-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        table.data-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        table.data-table tr.selected td {
+            background-color: #e0f2fe !important;
+            color: #0369a1;
+        }
+
+        /* COLUNAS ESPECÍFICAS DA TABELA */
+        .col-lote { width: 50px; text-align: center; font-weight: 700; }
+        .col-desc { min-width: 280px; font-weight: 500; }
+        .col-status { width: 130px; text-align: center; }
+        .col-price { width: 110px; text-align: right; font-weight: 700; color: #1e3a8a; }
+        .col-store { width: 140px; }
+        .col-cnpj { width: 135px; font-family: monospace; font-size: 11px; }
+        .col-date { width: 130px; font-size: 11px; color: var(--text-secondary); text-align: center; }
+        .col-link { width: 100px; text-align: center; }
+
+        .badge-homologado {
+            display: inline-block;
+            background-color: var(--success-light);
+            color: var(--success);
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid #86efac;
+        }
+
+        .badge-pendente {
+            display: inline-block;
+            background-color: #fef3c7;
+            color: #b45309;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid #fde68a;
+        }
+
+        /* PAINEL DE DETALHES DO ITEM SELECIONADO */
+        .detail-card {
+            margin-top: 10px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        .detail-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+        }
+
+        .detail-item {
+            margin-bottom: 6px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .detail-value {
+            font-size: 12px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .detail-price-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+
+        .detail-price-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .detail-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+        }
+
+        /* ABA 2: COMPROVANTES */
+        .prints-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 8px;
+        }
+
+        .prints-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            background-color: #f8fafc;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .prints-viewport-split {
+            display: flex;
+            flex: 1;
+            gap: 12px;
+            overflow: hidden;
+            min-height: 480px;
+        }
+
+        .prints-image-viewer {
+            flex: 1;
+            background-color: #e2e8f0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 10px;
+        }
+
+        .prints-image-viewer img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .prints-side-ficha {
+            width: 320px;
+            flex-shrink: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ABA 3: EXPORTAÇÃO */
+        .export-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 16px 0;
+        }
+
+        .export-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .export-card h3 {
+            font-size: 14px;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-card p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-body {
+            font-size: 12px;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* TOAST NOTIFICAÇÃO */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* SCROLLBAR MODERNA */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO INSTITUCIONAL -->
+    <header class="app-header">
+        <div class="header-title-box">
+            <span class="header-icon">🏛️</span>
+            <div class="header-text">
+                <h1>SISTEMA DE PESQUISA DE PREÇOS DE MERCADO</h1>
+                <p>PREGÃO SRP — LEI FEDERAL Nº 14.133/2021 & IN SEGES/ME</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div id="statusPill" class="status-pill online">
+                <span class="status-dot"></span>
+                <span id="statusPillText">Pronto / Conectado</span>
+            </div>
+            <button class="btn btn-sm" id="btnToggleSidebar" onclick="toggleSidebar()">◨ Ocultar Painel</button>
+            <button class="btn btn-sm" onclick="fetchData()">🔄 Atualizar Dados</button>
+        </div>
+    </header>
+
+    <!-- BARRA DE CARDS KPI -->
+    <section class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-icon">📋</div>
+            <div class="kpi-content">
+                <span class="kpi-title">Total de Itens</span>
+                <div class="kpi-value-row">
+                    <span class="kpi-value" id="kpiTotal">0</span>
+                    <span class="kpi-badge blue">Edital</span>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon">✅</div>
+            <div class="kpi-content">
+                <span class="kpi-title">Itens Homologados</span>
+                <div class="kpi-value-row">
+                    <span class="kpi-value" id="kpiHomologados">0</span>
+                    <span class="kpi-badge green" id="kpiHomologadosPct">0%</span>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-content">
+                <span class="kpi-title">Média de Preços</span>
+                <div class="kpi-value-row">
+                    <span class="kpi-value" id="kpiMedia">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon">🖼️</div>
+            <div class="kpi-content">
+                <span class="kpi-title">Comprovantes</span>
+                <div class="kpi-value-row">
+                    <span class="kpi-value" id="kpiPrints">0</span>
+                    <span class="kpi-badge green">Oficiais</span>
+                </div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon">⚡</div>
+            <div class="kpi-content">
+                <span class="kpi-title">Cota Gemini AI</span>
+                <div class="kpi-value-row">
+                    <span class="kpi-value" id="kpiGemini">0 / 500 RPD</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÁREA PRINCIPAL DE TRABALHO -->
+    <div class="main-workspace">
+
+        <!-- PAINEL LATERAL DE CONTROLE -->
+        <aside class="sidebar" id="appSidebar">
+            <!-- GRUPO 1: PESQUISA DE PREÇOS -->
+            <div class="sidebar-group">
+                <div class="group-header">🔍 1. Pesquisa de Preços</div>
+                <label class="radio-option">
+                    <input type="radio" name="searchScope" value="all" checked onchange="onScopeChange()">
+                    <span>Todos os itens da planilha</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="searchScope" value="range" onchange="onScopeChange()">
+                    <span>Faixa de itens (De até):</span>
+                </label>
+                <div class="range-inputs" id="rangeInputsBox" style="display: none;">
+                    <input type="number" id="inpRangeStart" min="1" value="1" placeholder="Início">
+                    <span>até</span>
+                    <input type="number" id="inpRangeEnd" min="1" value="5" placeholder="Fim">
+                </div>
+                <label class="radio-option">
+                    <input type="radio" name="searchScope" value="single" onchange="onScopeChange()">
+                    <span>Lote específico:</span>
+                </label>
+                <div class="range-inputs" id="singleInputBox" style="display: none;">
+                    <input type="number" id="inpSingleLote" min="1" value="1" placeholder="Lote nº">
+                </div>
+
+                <div class="btn-group-v">
+                    <button class="btn btn-primary" id="btnStartSearch" onclick="startSearch()">
+                        🚀 Iniciar Pesquisa Automática
+                    </button>
+                    <button class="btn btn-danger" id="btnStopSearch" onclick="stopSearch()" disabled>
+                        ⏹️ Parar Pesquisa
+                    </button>
+                </div>
+
+                <div class="progress-box">
+                    <div class="progress-bar-fill" id="searchProgressBar"></div>
+                </div>
+                <div class="status-msg-box" id="searchStatusMsg">
+                    Pronto para iniciar pesquisa de mercado.
+                </div>
+            </div>
+
+            <!-- GRUPO 2: PLANILHA DE TRABALHO -->
+            <div class="sidebar-group">
+                <div class="group-header">📊 2. Planilha de Trabalho</div>
+                <div style="font-size: 11px; margin-bottom: 8px; color: var(--text-secondary);">
+                    <b>Ativa:</b> <span id="sheetActiveName">Carregando...</span><br>
+                    <b>Itens:</b> <span id="sheetItemsCount">--</span>
+                </div>
+                <div class="btn-group-v">
+                    <button class="btn" onclick="openUploadModal()">📂 Importar Planilha (Excel/CSV)</button>
+                    <button class="btn" onclick="restoreDefaultSheet()">🔄 Restaurar Padrão</button>
+                </div>
+            </div>
+
+            <!-- GRUPO 3: MODELOS E EXPORTAÇÃO -->
+            <div class="sidebar-group">
+                <div class="group-header">📥 3. Modelos e Exportação</div>
+                <div class="btn-group-v">
+                    <a class="btn" href="/download/modelo" download>📥 Baixar Modelo de Itens (.xlsx)</a>
+                    <a class="btn" href="/download/excel" download>📊 Baixar Planilha Consolidada (.xlsx)</a>
+                    <a class="btn" href="/download/zip" download>📦 Baixar Pacote Completo (.zip)</a>
+                </div>
+            </div>
+
+            <!-- GRUPO 4: MANUTENÇÃO E SEGURANÇA -->
+            <div class="sidebar-group danger-zone">
+                <div class="group-header">🚨 4. Manutenção e Segurança</div>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">
+                    Reinicia os dados para um novo pregão. Cria backup automático antes de limpar.
+                </p>
+                <button class="btn btn-danger" style="width: 100%;" onclick="openResetModal()">
+                    🚨 Limpar Dados e Reiniciar
+                </button>
+            </div>
+        </aside>
+
+        <!-- ÁREA CENTRAL COM NAVEGAÇÃO DE ABAS -->
+        <main class="content-area">
+            <!-- NAVEGAÇÃO DAS ABAS -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('tabCotacoes', this)">
+                    📋 Tabela de Cotações
+                </button>
+                <button class="tab-btn" onclick="switchTab('tabPrints', this)">
+                    🖼️ Comprovantes com Carimbo Oficial
+                </button>
+                <button class="tab-btn" onclick="switchTab('tabExport', this)">
+                    📦 Central de Exportação
+                </button>
+                <button class="tab-btn" onclick="switchTab('tabItens', this)">
+                    📑 Planilha de Itens em Uso
+                </button>
+            </div>
+
+            <!-- ABA 1: TABELA DE COTAÇÕES -->
+            <div class="tab-pane active" id="tabCotacoes">
+                <div class="filter-toolbar">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="inpFilterText" placeholder="Buscar por descrição, fornecedor, CNPJ..." oninput="filterTable()">
+                    </div>
+                    <select class="filter-select" id="selFilterStatus" onchange="filterTable()">
+                        <option value="all">Todas as Situações</option>
+                        <option value="homologado">✓ Apenas Homologados</option>
+                        <option value="pendente">⏳ Apenas Pendentes</option>
+                    </select>
+                    <button class="btn btn-sm" onclick="clearFilters()">✕ Limpar</button>
+                    <span class="counter-badge" id="lblTableCounter">Exibindo 0 de 0 registros</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table" id="tableCotacoes">
+                        <thead>
+                            <tr>
+                                <th class="col-lote">Lote</th>
+                                <th class="col-desc">Descrição Técnica do Item (Termo de Referência)</th>
+                                <th class="col-status">Situação</th>
+                                <th class="col-price">Preço Unitário</th>
+                                <th class="col-store">Fornecedor</th>
+                                <th class="col-cnpj">CNPJ</th>
+                                <th class="col-date">Data / Hora</th>
+                                <th class="col-link">Fonte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyCotacoes">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAINEL DE DETALHES DO REGISTRO SELECIONADO -->
+                <div class="detail-card" id="detailCard" style="display: none;">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <span>📋 Detalhes do Registro Selecionado — Lote <span id="detLoteNum">--</span></span>
+                            <span id="detStatusBadge" class="badge-homologado">Homologado</span>
+                        </div>
+                    </div>
+                    <div class="detail-grid">
+                        <div>
+                            <div class="detail-item">
+                                <span class="detail-label">Descrição Técnica do Edital</span>
+                                <div class="detail-value" id="detDescLicitacao">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Produto Identificado na Loja</span>
+                                <div class="detail-value" id="detNomeComercial">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Memória de Cálculo e Análise da IA</span>
+                                <div class="detail-value" id="detObs" style="color: var(--text-secondary); background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid var(--border);">--</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="detail-price-box">
+                                <span class="detail-label">Preço Unitário Homologado</span>
+                                <div class="detail-price-val" id="detPrecoUnit">R$ 0,00</div>
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;" id="detEmbalagemInfo">Embalagem: --</div>
+                            </div>
+                            <div class="detail-item" style="margin-top: 8px;">
+                                <span class="detail-label">Fornecedor / Loja</span>
+                                <div class="detail-value" id="detFornecedor">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">CNPJ Oficial</span>
+                                <div class="detail-value" id="detCnpj" style="font-family: monospace;">--</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <a class="btn btn-primary btn-sm" id="btnDetAbrirLink" href="#" target="_blank">🌐 Abrir no Fornecedor</a>
+                        <button class="btn btn-sm" id="btnDetVerPrint" onclick="goToSelectedPrint()">📄 Ver Comprovante Deste Lote</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 2: COMPROVANTES COM CARIMBO -->
+            <div class="tab-pane" id="tabPrints">
+                <div class="prints-container">
+                    <div class="prints-toolbar">
+                        <label style="font-weight: 700;">Lote:</label>
+                        <select class="filter-select" id="selPrintsLote" style="min-width: 200px;" onchange="onPrintSelectChange()">
+                            <!-- Preenchido via JS -->
+                        </select>
+                        <button class="btn btn-sm" onclick="navPrint(-1)">◀ Anterior</button>
+                        <button class="btn btn-sm" onclick="navPrint(1)">Próximo ▶</button>
+                        <div style="width: 1px; height: 18px; background: var(--border); margin: 0 4px;"></div>
+                        <button class="btn btn-sm" onclick="zoomImage(0.85)">🔍 -</button>
+                        <button class="btn btn-sm" onclick="zoomReset()">100%</button>
+                        <button class="btn btn-sm" onclick="zoomImage(1.15)">🔍 +</button>
+                        <button class="btn btn-sm" onclick="zoomFitWidth()">📐 Largura</button>
+                        <button class="btn btn-sm" onclick="zoomFitWindow()">🖥️ Janela</button>
+                        <span id="lblZoomPct" style="font-weight: 700; color: var(--primary); min-width: 45px; text-align: center;">100%</span>
+                        <div style="flex: 1;"></div>
+                        <a class="btn btn-sm" id="btnOpenPrintTab" href="#" target="_blank">🖼️ Abrir Externo</a>
+                    </div>
+
+                    <div class="prints-viewport-split">
+                        <div class="prints-image-viewer" id="printViewerBox">
+                            <img id="imgPrintPreview" src="" alt="Comprovante de Cotação">
+                        </div>
+                        <div class="prints-side-ficha">
+                            <div class="group-header">📋 Ficha Oficial do Item</div>
+                            <div class="detail-item">
+                                <span class="detail-label">Lote:</span>
+                                <div class="detail-value" id="pfLote">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Descrição:</span>
+                                <div class="detail-value" id="pfDesc">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Fornecedor:</span>
+                                <div class="detail-value" id="pfFornecedor">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">CNPJ:</span>
+                                <div class="detail-value" id="pfCnpj" style="font-family: monospace;">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Preço Homologado:</span>
+                                <div class="detail-value" id="pfPreco" style="font-weight: 700; color: #16a34a; font-size: 14px;">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Data da Coleta:</span>
+                                <div class="detail-value" id="pfData">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Memória de Cálculo:</span>
+                                <div class="detail-value" id="pfObs" style="font-size: 11px; color: var(--text-secondary); background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid var(--border);">--</div>
+                            </div>
+                            <a class="btn btn-primary" id="btnPfLink" href="#" target="_blank" style="margin-top: 10px;">🌐 Acessar Loja Original</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: EXPORTAÇÃO -->
+            <div class="tab-pane" id="tabExport">
+                <div style="margin-bottom: 12px;">
+                    <h2 style="font-size: 16px; color: #1e3a8a; font-weight: 700;">Central de Exportação e Conformidade (Lei 14.133/2021)</h2>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Gere os relatórios formais e pacotes probatórios para instrução do processo licitatório.</p>
+                </div>
+                <div class="export-cards-grid">
+                    <div class="export-card">
+                        <h3>📊 Planilha de Preços Consolidada</h3>
+                        <p>Arquivo Excel oficial (.xlsx) formatado com fórmulas, dados dos fornecedores, CNPJs validados na Receita Federal e memória de cálculo da IA.</p>
+                        <a class="btn btn-primary" href="/download/excel" download>Baixar Planilha (.xlsx)</a>
+                    </div>
+                    <div class="export-card">
+                        <h3>📦 Pacote Completo do Processo</h3>
+                        <p>Arquivo compactado (.zip) contendo a planilha oficial, todos os comprovantes monocromáticos carimbados e o sumário executivo em índice digital.</p>
+                        <a class="btn btn-primary" href="/download/zip" download>Baixar Pacote Completo (.zip)</a>
+                    </div>
+                    <div class="export-card">
+                        <h3>📥 Modelo de Planilha de Itens</h3>
+                        <p>Modelo em Excel limpo para preenchimento de lotes e descrições técnicas, pronto para importação direta no sistema de cotações.</p>
+                        <a class="btn" href="/download/modelo" download>Baixar Modelo (.xlsx)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 4: PLANILHA DE ITENS EM USO -->
+            <div class="tab-pane" id="tabItens">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <h2 style="font-size: 15px; color: #1e3a8a; font-weight: 700;">Itens Cadastrados na Planilha de Trabalho</h2>
+                        <p style="font-size: 12px; color: var(--text-secondary);">Confira os lotes cadastrados e as especificações técnicas vigentes.</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="openUploadModal()">📂 Carregar Outra Planilha</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="tableItens">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">Lote</th>
+                                <th>Descrição Técnica Completa</th>
+                                <th style="width: 140px; text-align: center;">Unidade / Qtd</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyItens">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE UPLOAD DE PLANILHA -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-dialog">
+            <div class="modal-title">📂 Importar Planilha de Itens</div>
+            <div class="modal-body">
+                <p>Selecione uma planilha no formato <b>.xlsx</b> ou <b>.csv</b> contendo as colunas de Lote e Descrição do Item.</p>
+                <div style="margin: 16px 0; padding: 20px; border: 2px dashed var(--border); border-radius: 8px; text-align: center; background: #f8fafc;">
+                    <input type="file" id="fileUploadInput" accept=".xlsx,.csv" style="display: none;" onchange="onFileSelected(this)">
+                    <button class="btn" onclick="document.getElementById('fileUploadInput').click()">Selecionar Arquivo no Computador</button>
+                    <div id="uploadFileName" style="margin-top: 8px; font-weight: 600; color: var(--primary);">Nenhum arquivo selecionado</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeUploadModal()">Cancelar</button>
+                <button class="btn btn-primary" id="btnSubmitUpload" onclick="submitSheetUpload()" disabled>Importar e Mapear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE REINÍCIO E LIMPEZA DE DADOS (AÇÃO DESTRUTIVA) -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-dialog">
+            <div class="modal-title" style="color: var(--danger);">🚨 Confirmar Limpeza e Reinício dos Dados</div>
+            <div class="modal-body">
+                <p>Esta operação é irreversível e executará as seguintes ações:</p>
+                <ul style="margin: 10px 0 10px 20px; line-height: 1.6;">
+                    <li><b>Geração automática de Backup</b> com data e hora em pasta dedicada.</li>
+                    <li>Exclusão de todas as cotações salvas na tabela de trabalho.</li>
+                    <li>Limpeza dos arquivos de comprovantes da pasta local.</li>
+                    <li>Reinício dos dados para preparação de um novo pregão eletrônico.</li>
+                </ul>
+                <p style="font-weight: 700; color: var(--danger);">Deseja realmente continuar com a exclusão?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeResetModal()">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmResetAll()">Sim, Criar Backup e Limpar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <div id="toast">Notificação</div>
+
+    <!-- JAVASCRIPT DE CONTROLE E REGRAS DE NEGÓCIO -->
+    <script>
+        // ESTADO GLOBAL DA APLICAÇÃO
+        let appData = {
+            cotacoes: [],
+            itens_ativos: [],
+            kpis: {},
+            active_sheet: {},
+            prints: []
+        };
+        let selectedLote = null;
+        let currentZoom = 1.0;
+        let isSearching = false;
+        let pollTimer = null;
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            checkSearchStatus();
+            // Polling suave de status a cada 3 segundos
+            setInterval(checkSearchStatus, 3000);
+        });
+
+        function showToast(msg, duration = 3000) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, duration);
+        }
+
+        // ALTERNAR ABAS
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ALTERNAR BARRA LATERAL
+        function toggleSidebar() {
+            const sb = document.getElementById('appSidebar');
+            const btn = document.getElementById('btnToggleSidebar');
+            sb.classList.toggle('collapsed');
+            if (sb.classList.contains('collapsed')) {
+                btn.innerText = '◨ Mostrar Painel';
+            } else {
+                btn.innerText = '◨ Ocultar Painel';
+            }
+        }
+
+        // ESCOPO DA PESQUISA
+        function onScopeChange() {
+            const val = document.querySelector('input[name="searchScope"]:checked').value;
+            document.getElementById('rangeInputsBox').style.display = (val === 'range') ? 'flex' : 'none';
+            document.getElementById('singleInputBox').style.display = (val === 'single') ? 'flex' : 'none';
+        }
+
+        // CARREGAR DADOS DO SERVIDOR
+        async function fetchData() {
+            try {
+                const res = await fetch('/api/data');
+                const data = await res.json();
+                appData = data;
+
+                // 1. Atualizar KPIs
+                document.getElementById('kpiTotal').innerText = data.kpis.total || 0;
+                document.getElementById('kpiHomologados').innerText = data.kpis.homologados || 0;
+                document.getElementById('kpiHomologadosPct').innerText = data.kpis.homologados_pct || '0%';
+                document.getElementById('kpiMedia').innerText = data.kpis.media_preco || 'R$ 0,00';
+                document.getElementById('kpiPrints').innerText = data.kpis.comprovantes || 0;
+                document.getElementById('kpiGemini').innerText = `${data.kpis.gemini_rpd || 0} / 500 RPD`;
+
+                // 2. Atualizar Planilha Ativa
+                document.getElementById('sheetActiveName').innerText = data.active_sheet.source_name || '--';
+                document.getElementById('sheetItemsCount').innerText = `${data.active_sheet.total_items || 0} lotes cadastrados`;
+
+                // 3. Renderizar Tabela de Cotações
+                renderCotacoesTable();
+
+                // 4. Renderizar Tabela de Itens Ativos
+                renderItensTable();
+
+                // 5. Preencher dropdown de Comprovantes
+                renderPrintsDropdown();
+
+            } catch (err) {
+                console.error("Erro ao buscar dados:", err);
+            }
+        }
+
+        // RENDERIZAR TABELA DE COTAÇÕES
+        function renderCotacoesTable() {
+            const tbody = document.getElementById('tbodyCotacoes');
+            tbody.innerHTML = '';
+
+            const term = document.getElementById('inpFilterText').value.toLowerCase().trim();
+            const statusFilter = document.getElementById('selFilterStatus').value;
+
+            let visibleCount = 0;
+
+            appData.cotacoes.forEach((q) => {
+                const desc = (q.descricao_licitacao || '').toLowerCase();
+                const fornecedor = (q.fornecedor || '').toLowerCase();
+                const cnpj = (q.cnpj || '').toLowerCase();
+                const loteStr = String(q.lote || '');
+                const status = (q.status || '').toLowerCase();
+                const isHomologado = status.includes('homologado');
+
+                // Filtro de texto
+                if (term) {
+                    if (!desc.includes(term) && !fornecedor.includes(term) && !cnpj.includes(term) && !loteStr.includes(term)) {
+                        return;
+                    }
+                }
+
+                // Filtro de status
+                if (statusFilter === 'homologado' && !isHomologado) return;
+                if (statusFilter === 'pendente' && isHomologado) return;
+
+                visibleCount++;
+
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-lote', q.lote);
+                if (selectedLote === q.lote) tr.classList.add('selected');
+
+                const precoFormatted = q.valor_unitario ? `R$ ${Number(q.valor_unitario).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '—';
+                const statusBadge = isHomologado 
+                    ? '<span class="badge-homologado">✓ Homologado</span>'
+                    : '<span class="badge-pendente">⏳ Pendente</span>';
+                
+                const url = q.url || '';
+                const linkHtml = url.startsWith('http') 
+                    ? `<a href="${url}" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none;">🌐 Acessar</a>`
+                    : '—';
+
+                tr.innerHTML = `
+                    <td class="col-lote">${q.lote || '--'}</td>
+                    <td class="col-desc" title="${q.descricao_licitacao || ''}">${q.descricao_licitacao || '--'}</td>
+                    <td class="col-status">${statusBadge}</td>
+                    <td class="col-price">${precoFormatted}</td>
+                    <td class="col-store" title="${q.fornecedor || ''}">${q.fornecedor || '—'}</td>
+                    <td class="col-cnpj">${q.cnpj || '—'}</td>
+                    <td class="col-date">${q.data_hora || '—'}</td>
+                    <td class="col-link">${linkHtml}</td>
+                `;
+
+                tr.addEventListener('click', () => selectItem(q.lote));
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('lblTableCounter').innerText = `Exibindo ${visibleCount} de ${appData.cotacoes.length} registros`;
+
+            // Mantém detalhe aberto se item estiver selecionado
+            if (selectedLote) {
+                updateDetailPanel(selectedLote);
+            } else if (appData.cotacoes.length > 0) {
+                selectItem(appData.cotacoes[0].lote);
+            }
+        }
+
+        function filterTable() {
+            renderCotacoesTable();
+        }
+
+        function clearFilters() {
+            document.getElementById('inpFilterText').value = '';
+            document.getElementById('selFilterStatus').value = 'all';
+            renderCotacoesTable();
+        }
+
+        // SELEÇÃO DE ITEM E PAINEL DE DETALHES
+        function selectItem(lote) {
+            selectedLote = lote;
+            document.querySelectorAll('#tbodyCotacoes tr').forEach(r => {
+                if (Number(r.getAttribute('data-lote')) === lote) {
+                    r.classList.add('selected');
+                } else {
+                    r.classList.remove('selected');
+                }
+            });
+            updateDetailPanel(lote);
+        }
+
+        function updateDetailPanel(lote) {
+            const item = appData.cotacoes.find(q => q.lote === lote);
+            const card = document.getElementById('detailCard');
+            if (!item) {
+                card.style.display = 'none';
+                return;
+            }
+
+            card.style.display = 'block';
+            document.getElementById('detLoteNum').innerText = item.lote || '--';
+            
+            const isHom = (item.status || '').toLowerCase().includes('homologado');
+            const badge = document.getElementById('detStatusBadge');
+            badge.className = isHom ? 'badge-homologado' : 'badge-pendente';
+            badge.innerText = isHom ? '✓ Homologado' : '⏳ Pendente';
+
+            document.getElementById('detDescLicitacao').innerText = item.descricao_licitacao || '--';
+            document.getElementById('detNomeComercial').innerText = item.nome_produto_cotado || '—';
+            document.getElementById('detObs').innerText = item.observacao || 'Nenhuma observação ou memória de cálculo registrada.';
+            
+            const preco = item.valor_unitario ? `R$ ${Number(item.valor_unitario).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '—';
+            document.getElementById('detPrecoUnit').innerText = preco;
+            document.getElementById('detEmbalagemInfo').innerText = `Embalagem: ${item.quantidade_embalagem || 1} unidade(s) | Total: R$ ${Number(item.valor_total_anuncio || item.valor_unitario || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            document.getElementById('detFornecedor').innerText = item.fornecedor || '—';
+            document.getElementById('detCnpj').innerText = item.cnpj ? `${item.cnpj} (${item.cnpj_origem || 'Verificado'})` : '—';
+
+            const btnLink = document.getElementById('btnDetAbrirLink');
+            if (item.url && item.url.startsWith('http')) {
+                btnLink.href = item.url;
+                btnLink.classList.remove('disabled');
+            } else {
+                btnLink.href = '#';
+                btnLink.classList.add('disabled');
+            }
+        }
+
+        function goToSelectedPrint() {
+            if (!selectedLote) return;
+            const tabBtn = document.querySelectorAll('.tab-btn')[1];
+            switchTab('tabPrints', tabBtn);
+            const sel = document.getElementById('selPrintsLote');
+            sel.value = selectedLote;
+            onPrintSelectChange();
+        }
+
+        // ABA 2: COMPROVANTES E ZOOM
+        function renderPrintsDropdown() {
+            const sel = document.getElementById('selPrintsLote');
+            sel.innerHTML = '';
+
+            appData.cotacoes.forEach(q => {
+                const opt = document.createElement('option');
+                opt.value = q.lote;
+                opt.text = `Lote ${String(q.lote).padStart(3, '0')} — ${(q.descricao_licitacao || '').substring(0, 45)}...`;
+                sel.appendChild(opt);
+            });
+
+            if (appData.cotacoes.length > 0) {
+                if (!sel.value) sel.value = appData.cotacoes[0].lote;
+                onPrintSelectChange();
+            }
+        }
+
+        function onPrintSelectChange() {
+            const lote = Number(document.getElementById('selPrintsLote').value);
+            const item = appData.cotacoes.find(q => q.lote === lote);
+            if (!item) return;
+
+            // Carrega imagem do print
+            const img = document.getElementById('imgPrintPreview');
+            const btnExt = document.getElementById('btnOpenPrintTab');
+            const fname = (item.arquivo_print || '').split(/\\|\//).pop();
+
+            if (fname) {
+                const imgUrl = `/prints/${encodeURIComponent(fname)}`;
+                img.src = imgUrl;
+                btnExt.href = imgUrl;
+            } else {
+                img.src = '';
+                btnExt.href = '#';
+            }
+
+            // Atualiza Ficha Lateral
+            document.getElementById('pfLote').innerText = item.lote || '--';
+            document.getElementById('pfDesc').innerText = item.descricao_licitacao || '--';
+            document.getElementById('pfFornecedor').innerText = item.fornecedor || '--';
+            document.getElementById('pfCnpj').innerText = item.cnpj || '--';
+            document.getElementById('pfPreco').innerText = item.valor_unitario ? `R$ ${Number(item.valor_unitario).toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : '--';
+            document.getElementById('pfData').innerText = item.data_hora || '--';
+            document.getElementById('pfObs').innerText = item.observacao || '--';
+
+            const btnLink = document.getElementById('btnPfLink');
+            if (item.url && item.url.startsWith('http')) {
+                btnLink.href = item.url;
+                btnLink.style.display = 'inline-flex';
+            } else {
+                btnLink.style.display = 'none';
+            }
+            zoomReset();
+        }
+
+        function navPrint(delta) {
+            const sel = document.getElementById('selPrintsLote');
+            let idx = sel.selectedIndex + delta;
+            if (idx >= 0 && idx < sel.options.length) {
+                sel.selectedIndex = idx;
+                onPrintSelectChange();
+            }
+        }
+
+        // CONTROLES DE ZOOM DA IMAGEM
+        function zoomImage(factor) {
+            currentZoom = Math.max(0.2, Math.min(3.0, currentZoom * factor));
+            applyZoom();
+        }
+
+        function zoomReset() {
+            currentZoom = 1.0;
+            applyZoom();
+        }
+
+        function zoomFitWidth() {
+            const viewer = document.getElementById('printViewerBox');
+            const img = document.getElementById('imgPrintPreview');
+            if (img.naturalWidth) {
+                currentZoom = (viewer.clientWidth - 30) / img.naturalWidth;
+                applyZoom();
+            }
+        }
+
+        function zoomFitWindow() {
+            const viewer = document.getElementById('printViewerBox');
+            const img = document.getElementById('imgPrintPreview');
+            if (img.naturalHeight) {
+                currentZoom = (viewer.clientHeight - 30) / img.naturalHeight;
+                applyZoom();
+            }
+        }
+
+        function applyZoom() {
+            const img = document.getElementById('imgPrintPreview');
+            img.style.transform = `scale(${currentZoom})`;
+            img.style.transformOrigin = 'center center';
+            document.getElementById('lblZoomPct').innerText = `${Math.round(currentZoom * 100)}%`;
+        }
+
+        // ABA 4: RENDERIZAR ITENS ATIVOS DA PLANILHA
+        function renderItensTable() {
+            const tbody = document.getElementById('tbodyItens');
+            tbody.innerHTML = '';
+            appData.itens_ativos.forEach(it => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: 700;">${it.lote || '--'}</td>
+                    <td>${it.descricao_original || '--'}</td>
+                    <td style="text-align: center; color: var(--text-secondary);">${it.unidade || 'UNID'} (Qtd: ${it.quantidade || 1})</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // PESQUISA AUTOMÁTICA (ROBÔ + IA)
+        async function startSearch() {
+            const scope = document.querySelector('input[name="searchScope"]:checked').value;
+            const payload = {
+                mode: scope,
+                start: parseInt(document.getElementById('inpRangeStart').value) || 1,
+                end: parseInt(document.getElementById('inpRangeEnd').value) || 5,
+                lote: parseInt(document.getElementById('inpSingleLote').value) || 1
+            };
+
+            try {
+                document.getElementById('btnStartSearch').disabled = true;
+                document.getElementById('btnStopSearch').disabled = false;
+                
+                const res = await fetch('/api/search/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const r = await res.json();
+                if (r.success) {
+                    showToast("🚀 Pesquisa automática iniciada com sucesso!");
+                    isSearching = true;
+                    checkSearchStatus();
+                } else {
+                    showToast("⚠️ " + (r.error || "Erro ao iniciar pesquisa"));
+                }
+            } catch (err) {
+                showToast("Erro de comunicação ao iniciar pesquisa.");
+            }
+        }
+
+        async function stopSearch() {
+            try {
+                await fetch('/api/search/stop', { method: 'POST' });
+                showToast("⏹️ Solicitação de parada enviada.");
+            } catch (err) {
+                showToast("Erro ao solicitar parada.");
+            }
+        }
+
+        async function checkSearchStatus() {
+            try {
+                const res = await fetch('/api/search/status');
+                const st = await res.json();
+                
+                const pill = document.getElementById('statusPill');
+                const pillText = document.getElementById('statusPillText');
+                const btnStart = document.getElementById('btnStartSearch');
+                const btnStop = document.getElementById('btnStopSearch');
+                const pBar = document.getElementById('searchProgressBar');
+                const pMsg = document.getElementById('searchStatusMsg');
+
+                pBar.style.width = `${st.progress || 0}%`;
+                pMsg.innerText = st.status_msg || 'Pronto.';
+
+                if (st.running) {
+                    isSearching = true;
+                    pill.className = 'status-pill busy';
+                    pillText.innerText = 'Executando Pesquisa...';
+                    btnStart.disabled = true;
+                    btnStop.disabled = false;
+                } else {
+                    if (isSearching) {
+                        isSearching = false;
+                        showToast("✅ Pesquisa finalizada!");
+                        fetchData();
+                    }
+                    pill.className = 'status-pill online';
+                    pillText.innerText = 'Pronto / Conectado';
+                    btnStart.disabled = false;
+                    btnStop.disabled = true;
+                }
+            } catch (err) {
+                console.error("Erro no status:", err);
+            }
+        }
+
+        // MODAL DE UPLOAD DE PLANILHA
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.add('open');
+            document.getElementById('uploadFileName').innerText = 'Nenhum arquivo selecionado';
+            document.getElementById('btnSubmitUpload').disabled = true;
+            document.getElementById('fileUploadInput').value = '';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('open');
+        }
+
+        function onFileSelected(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('uploadFileName').innerText = input.files[0].name;
+                document.getElementById('btnSubmitUpload').disabled = false;
+            }
+        }
+
+        async function submitSheetUpload() {
+            const input = document.getElementById('fileUploadInput');
+            if (!input.files || !input.files[0]) return;
+
+            const formData = new FormData();
+            formData.append('sheet_file', input.files[0]);
+
+            try {
+                showToast("Enviando e processando planilha...");
+                const res = await fetch('/api/upload-sheet', {
+                    method: 'POST',
+                    body: formData
+                });
+                const r = await res.json();
+                if (r.success) {
+                    showToast(`✅ Planilha importada com sucesso! ${r.total} itens mapeados.`);
+                    closeUploadModal();
+                    fetchData();
+                } else {
+                    alert("Erro ao importar planilha: " + r.error);
+                }
+            } catch (err) {
+                alert("Falha na comunicação ao enviar planilha.");
+            }
+        }
+
+        async function restoreDefaultSheet() {
+            if (!confirm("Deseja restaurar a planilha padrão de itens?")) return;
+            try {
+                const res = await fetch('/api/restore-default-sheet', { method: 'POST' });
+                const r = await res.json();
+                if (r.success) {
+                    showToast("Planilha padrão restaurada!");
+                    fetchData();
+                }
+            } catch (err) {
+                showToast("Erro ao restaurar planilha.");
+            }
+        }
+
+        // MODAL DE RESET DE DADOS
+        function openResetModal() {
+            document.getElementById('resetModal').classList.add('open');
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.remove('open');
+        }
+
+        async function confirmResetAll() {
+            try {
+                showToast("Criando backup e limpando dados...");
+                const res = await fetch('/api/reset', { method: 'POST' });
+                const r = await res.json();
+                closeResetModal();
+                if (r.success) {
+                    showToast("✅ Dados reiniciados com sucesso! Backup salvo em: " + r.backup_folder);
+                    fetchData();
+                } else {
+                    alert("Erro ao reiniciar dados: " + r.error);
+                }
+            } catch (err) {
+                alert("Falha ao executar limpeza de dados.");
+            }
+        }
+    </script>
+</body>
+</html>

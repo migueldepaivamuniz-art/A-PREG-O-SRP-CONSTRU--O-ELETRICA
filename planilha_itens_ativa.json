@@ -1,0 +1,47 @@
+[
+  {
+    "index": 0,
+    "lote": 1,
+    "catmat": "",
+    "descricao_original": "VASILHAME DE AGUA MINERAL 20 LITROS",
+    "unidade": "UNID",
+    "quantidade": 1,
+    "grupo": ""
+  },
+  {
+    "index": 1,
+    "lote": 2,
+    "catmat": "",
+    "descricao_original": "ÁGUA MINERAL SEM GÁS 500ml",
+    "unidade": "UNID",
+    "quantidade": 1,
+    "grupo": ""
+  },
+  {
+    "index": 2,
+    "lote": 3,
+    "catmat": "",
+    "descricao_original": "ÁGUA MINERAL COM GÁS 500ml",
+    "unidade": "UNID",
+    "quantidade": 1,
+    "grupo": ""
+  },
+  {
+    "index": 3,
+    "lote": 4,
+    "catmat": "",
+    "descricao_original": "REGULADOR DE PRESSÃO 2KG/H 506/01",
+    "unidade": "UNID",
+    "quantidade": 1,
+    "grupo": ""
+  },
+  {
+    "index": 4,
+    "lote": 5,
+    "catmat": "",
+    "descricao_original": "MANGUEIRA MULTIUSO 3/8X4MM TRANÇADA",
+    "unidade": "UNID",
+    "quantidade": 1,
+    "grupo": ""
+  }
+]

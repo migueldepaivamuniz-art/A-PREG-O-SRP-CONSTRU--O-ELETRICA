@@ -1791,7 +1791,27 @@ class CotadorQtApp(QMainWindow):
         """)
         btn_refresh_top.clicked.connect(self.refresh_all_data)
 
+        btn_web_version = QPushButton("🌐 Abrir no Navegador")
+        btn_web_version.setCursor(Qt.PointingHandCursor)
+        btn_web_version.setToolTip("Inicia o servidor web local e abre o sistema no seu navegador padrão")
+        btn_web_version.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(255, 255, 255, 0.15);
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 12px;
+                padding: 6px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: rgba(255, 255, 255, 0.25);
+            }
+        """)
+        btn_web_version.clicked.connect(self.action_open_web_server)
+
         h_layout.addWidget(self.btn_toggle_sidebar)
+        h_layout.addWidget(btn_web_version)
         h_layout.addWidget(btn_refresh_top)
         main_layout.addWidget(header_frame)
 
@@ -3060,6 +3080,30 @@ class CotadorQtApp(QMainWindow):
                 "Um backup de segurança completo foi criado na pasta de backups."
             )
 
+    def action_open_web_server(self):
+        import threading
+        import webbrowser
+        def _start_web():
+            try:
+                import servidor_web
+                servidor_web.run_server(host="127.0.0.1", port=5000, open_browser=True)
+            except Exception as e:
+                print(f"Erro ao iniciar servidor web local: {e}")
+
+        if not getattr(self, "_web_server_started", False):
+            self._web_server_started = True
+            th = threading.Thread(target=_start_web, daemon=True)
+            th.start()
+            QMessageBox.information(
+                self,
+                "Servidor Web Local Iniciado",
+                "O servidor web local foi iniciado com sucesso!\n\n"
+                "Endereço: http://127.0.0.1:5000/\n\n"
+                "A página será aberta no seu navegador padrão."
+            )
+        else:
+            webbrowser.open("http://127.0.0.1:5000/")
+
     def action_reset_sheet(self):
         reset_active_sheet_to_default()
         self.refresh_all_data()
@@ -3297,11 +3341,17 @@ if __name__ == "__main__":
     parser.add_argument("--count", type=int, default=None, help="Quantidade de itens a cotar (modo CLI)")
     parser.add_argument("--reset", action="store_true", help="Limpa todos os dados salvos (modo CLI)")
     parser.add_argument("--cli", action="store_true", help="Força execução no modo terminal/CLI")
+    parser.add_argument("--web", "--server", action="store_true", help="Inicia o servidor web local (Flask) no navegador")
+    parser.add_argument("--port", type=int, default=5000, help="Porta do servidor web (padrão: 5000)")
+    parser.add_argument("--host", default="127.0.0.1", help="Host do servidor web (padrão: 127.0.0.1)")
 
     args, unknown = parser.parse_known_args()
 
     if args.reset:
         reset_all_data(backup=True)
+    elif args.web:
+        import servidor_web
+        servidor_web.run_server(host=args.host, port=args.port, open_browser=True)
     elif args.start is not None or args.count is not None or args.cli:
         s_idx = args.start if args.start is not None else 0
         c_qtd = args.count if args.count is not None else 3
