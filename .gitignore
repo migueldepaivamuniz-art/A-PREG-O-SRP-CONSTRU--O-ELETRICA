@@ -1,0 +1,34 @@
+# Ambientes e Segredos
+.env
+*.env
+*.env.local
+
+# Windows / Google Drive
+desktop.ini
+**/desktop.ini
+Thumbs.db
+ehthumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Backups automáticos gerados pelo sistema
+backup_*/
+*.bak
+*.tmp
+*.log
+
+# Arquivos de testes temporários
+test_*.png
+test_*.py
+
+# Configurações de IDE locais
+.vscode/desktop.ini
